@@ -1,0 +1,37 @@
+{
+  "name": "tramway-connection-mysql",
+  "version": "1.0.0",
+  "description": "A Provider that permits a Tramway application to connect to a MySQL database",
+  "main": "index.js",
+  "scripts": {
+    "prepublish": "npm run compile",
+    "compile": "gulp distribute",
+    "test": "gulp distribute && mocha tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/tramwayjs/tramway-connection-mysql.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://gitlab.com/tramwayjs/tramway-connection-mysql/issues"
+  },
+  "homepage": "https://gitlab.com/tramwayjs/tramway-connection-mysql#README",
+  "dependencies": {
+    "mysql": "^2.15.0",
+    "tramway-core-connection": "^2.0.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-plugin-transform-flow-strip-types": "^6.22.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-es2015-node6": "^0.4.0",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^7.0.1",
+    "gulp-nodemon": "^2.2.1",
+    "gulp-sourcemaps": "^2.6.4",
+    "mocha": "^5.2.0",
+    "tramway-core-testsuite": "^1.2.0"
+  }
+}
