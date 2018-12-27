@@ -9,6 +9,24 @@ export default class MySQLProvider extends Provider {
     constructor(params = {}) {
         super();
 
+        this.params = params;
+
+        this.connect(params);
+
+        this.connection.on('error', err => {
+            if ('ECONNRESET' === err.code) {
+                this.connect(params);
+            } else {
+                throw err;
+            }
+        });
+    }
+
+    connect(params) {
+        if (!params) {
+            params = this.params;
+        }
+
         const {database, username, password, dialect, host, ...rest} = params;
         this.connection = mysql.createConnection({
             host,
