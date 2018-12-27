@@ -9,7 +9,7 @@ describe("Simple acceptance tests to ensure library returns what's promised.", f
         lib.default, 
         "MySQLProvider", 
         [],
-        ["get", "getOne", "getMany", "has", "hasThese", "create", "createMany", "update", "delete", "deleteMany", "find", "count", "query", "execute", "executeTransaction", "prepareConditions", "prepareWhere", "flattenConditions"]
+        ["connect", "get", "getOne", "getMany", "has", "hasThese", "create", "createMany", "update", "delete", "deleteMany", "find", "count", "query", "execute", "executeTransaction", "prepareConditions", "prepareWhere", "flattenConditions"]
     ));
 
     describe("Should return an object for repositories.", function(){
