@@ -1,6 +1,6 @@
 {
   "name": "tramway-connection-mysql",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A Provider that permits a Tramway application to connect to a MySQL database",
   "main": "index.js",
   "scripts": {
