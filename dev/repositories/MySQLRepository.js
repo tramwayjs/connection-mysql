@@ -29,7 +29,12 @@ export default class MySQLRepository extends Repository {
      * @memberOf Repository
      */
     async getOne(id) {
-        let item = await this.provider.getOne(id, this.tableName);
+        let [item] = await this.provider.getOne(id, this.tableName);
+
+        if (!item) {
+            return;
+        }
+
         return this.factory.create(item);
     }
 
@@ -50,7 +55,10 @@ export default class MySQLRepository extends Repository {
      * @memberOf Repository
      */
     async create(entity) {
-        return await this.provider.create(entity, this.tableName);
+        entity = this.factory.create(entity);
+        let item = await this.provider.create(entity, this.tableName);
+        entity.setId(item.insertId);
+        return entity;
     }
 
     /**
@@ -59,6 +67,7 @@ export default class MySQLRepository extends Repository {
      * @memberOf Repository
      */
     async createMany(items) {
+        items = items.map(entity => this.factory.create(entity));
         return await this.provider.createMany(items, this.tableName);
     }
 
@@ -69,6 +78,7 @@ export default class MySQLRepository extends Repository {
      * @memberOf Repository
      */
     async update(entity) {
+        entity = this.factory.create(entity);
         return await this.provider.update(entity.getId(), entity, this.tableName);
     }
 
