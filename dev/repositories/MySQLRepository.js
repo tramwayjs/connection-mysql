@@ -2,10 +2,10 @@ import {Repository} from 'tramway-core-connection';
 
 export default class MySQLRepository extends Repository {
     /**
-     * 
-     * @param {MySQLProvider} provider 
-     * @param {Factory} factory 
-     * @param {string} tableName 
+     *
+     * @param {MySQLProvider} provider
+     * @param {Factory} factory
+     * @param {string} tableName
      */
     constructor(provider, factory, tableName) {
         super(provider, factory);
@@ -15,7 +15,7 @@ export default class MySQLRepository extends Repository {
     /**
      * @param {String|Number} id
      * @returns {boolean}
-     * 
+     *
      * @memberOf Repository
      */
     async exists(id) {
@@ -25,7 +25,7 @@ export default class MySQLRepository extends Repository {
     /**
      * @param {String|Number} id
      * @returns {Entity}
-     * 
+     *
      * @memberOf Repository
      */
     async getOne(id) {
@@ -40,7 +40,7 @@ export default class MySQLRepository extends Repository {
 
     /**
      * @returns {Collection}
-     * 
+     *
      * @memberOf Repository
      */
     async get() {
@@ -51,7 +51,7 @@ export default class MySQLRepository extends Repository {
     /**
      * @param {Entity} entity
      * @returns
-     * 
+     *
      * @memberOf Repository
      */
     async create(entity) {
@@ -63,7 +63,7 @@ export default class MySQLRepository extends Repository {
 
     /**
      * @param {Object[]} items
-     * 
+     *
      * @memberOf Repository
      */
     async createMany(items) {
@@ -74,18 +74,35 @@ export default class MySQLRepository extends Repository {
     /**
      * @param {Entity} entity
      * @returns
-     * 
+     *
      * @memberOf Repository
      */
     async update(entity) {
-        entity = this.factory.create(entity);
-        return await this.provider.update(entity.getId(), entity, this.tableName);
+        if (!entity || !entity.id) {
+            throw new Error('Invalid entity');
+        }
+
+        let [item] = await this.provider.getOne(entity.id, this.tableName);
+
+        if (!item) {
+            throw new Error('Unable to find entity');
+        }
+
+        for (let [key, value] of Object.entries(entity)) {
+            if (!item[key]) {
+                continue;
+            }
+
+            item[key] = value;
+        }
+
+        return await this.provider.update(item.id, item, this.tableName);
     }
 
     /**
      * @param {String|Number} id
      * @returns
-     * 
+     *
      * @memberOf Repository
      */
     async delete(id) {
@@ -95,7 +112,7 @@ export default class MySQLRepository extends Repository {
     /**
      * @param {string | Object} conditions
      * @returns {Collection}
-     * 
+     *
      * @memberOf Repository
      */
     async find(conditions) {
@@ -106,7 +123,7 @@ export default class MySQLRepository extends Repository {
     /**
      * @param {number[] | stringp[]} ids
      * @returns {Collection}
-     * 
+     *
      * @memberOf Repository
      */
     async getMany(ids) {
@@ -116,7 +133,7 @@ export default class MySQLRepository extends Repository {
 
     /**
      * @param {string | Object} conditions
-     * 
+     *
      * @memberOf Repository
      */
     async count(conditions) {
