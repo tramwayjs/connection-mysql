@@ -47,7 +47,9 @@ export default class MySQLProvider extends Provider {
     async getOne(id, tableName) {
         const template = `SELECT * FROM ?? WHERE id = ?`;
         let query = mysql.format(template, [tableName, id]);
-        return await this.execute(query);
+        let results = await this.execute(query);
+        const [result] = results;
+        return result;
     }
 
     /**
@@ -128,7 +130,9 @@ export default class MySQLProvider extends Provider {
     async create(item, tableName) {
         const template = `INSERT INTO ?? SET ?`;
         let query = mysql.format(template, [tableName, item]);
-        return await this.execute(query);
+        let result = await this.execute(query);
+        const {insertId} = result;
+        return entity.setId(insertId);
     }
 
     /**
@@ -155,7 +159,9 @@ export default class MySQLProvider extends Provider {
         const {id: itemId, ...entity} = item;
 
         let query = mysql.format(template, [tableName, entity, id]);
-        return await this.execute(query);
+        await this.execute(query);
+
+        return item;
     }
 
     /**
