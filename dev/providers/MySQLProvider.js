@@ -132,7 +132,7 @@ export default class MySQLProvider extends Provider {
         let query = mysql.format(template, [tableName, item]);
         let result = await this.execute(query);
         const {insertId} = result;
-        return entity.setId(insertId);
+        return item.setId(insertId);
     }
 
     /**
