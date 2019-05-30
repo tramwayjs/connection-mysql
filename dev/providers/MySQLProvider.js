@@ -37,6 +37,10 @@ export default class MySQLProvider extends Provider {
         });
     }
 
+    closeConnection() {
+        this.connection.end();
+    }
+
     /**
      * @param {number|string} id
      * @param {string} tableName
@@ -207,6 +211,7 @@ export default class MySQLProvider extends Provider {
                     reject(error);
                 }
 
+                this.closeConnection();
                 return resolve(results);
             });
         });
@@ -241,6 +246,7 @@ export default class MySQLProvider extends Provider {
                     });
                 });
 
+                this.closeConnection();
                 return resolve(results);
             });
         });
