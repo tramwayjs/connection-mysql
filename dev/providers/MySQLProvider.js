@@ -211,7 +211,6 @@ export default class MySQLProvider extends Provider {
                     reject(error);
                 }
 
-                this.closeConnection();
                 return resolve(results);
             });
         });
@@ -246,7 +245,6 @@ export default class MySQLProvider extends Provider {
                     });
                 });
 
-                this.closeConnection();
                 return resolve(results);
             });
         });
