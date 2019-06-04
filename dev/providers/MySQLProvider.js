@@ -85,8 +85,10 @@ export default class MySQLProvider extends Provider {
      * @memberOf Provider
      */
     async find(conditions, tableName) {
-        conditions = this.prepareConditions(conditions);
-        const template = `SELECT * FROM ?? ${conditions.length ? `WHERE ${this.prepareWhere(conditions)}` : ''}`;
+        const {limit, projection, ...options} = conditions;
+
+        conditions = this.prepareConditions(options);
+        const template = `SELECT * FROM ?? ${conditions.length ? `WHERE ${this.prepareWhere(conditions)}` : ''} ${limit ? `LIMIT ${limit}` : ''}`;
         let query = mysql.format(template, [tableName, ...this.flattenConditions(conditions)]);
         return await this.execute(query);
     }
@@ -274,6 +276,6 @@ export default class MySQLProvider extends Provider {
      * @returns {[key, value, key, value]}
      */
     flattenConditions(conditions) {
-        return conditions.reduce((res, current) => [...res, ...current]);
+        return conditions.reduce((res, current) => [...res, ...current], []);
     }
 }
