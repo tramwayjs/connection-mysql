@@ -57,7 +57,9 @@ export default class MySQLRepository extends Repository {
     async create(entity) {
         entity = this.factory.create(entity);
         let item = await this.provider.create(entity, this.tableName);
-        entity.setId(item.insertId);
+        if (item.insertId) {
+            entity.setId(item.insertId);
+        }
         return entity;
     }
 
@@ -82,14 +84,14 @@ export default class MySQLRepository extends Repository {
             throw new Error('Invalid entity');
         }
 
-        let [item] = await this.provider.getOne(entity.id, this.tableName);
+        let item = await this.provider.getOne(entity.id, this.tableName);
 
         if (!item) {
             throw new Error('Unable to find entity');
         }
 
         for (let [key, value] of Object.entries(entity)) {
-            if (!item[key]) {
+            if (typeof item[key] === 'undefined') {
                 continue;
             }
 
