@@ -28,13 +28,25 @@ export default class MySQLProvider extends Provider {
         }
 
         const {database, username, password, dialect, host, ...rest} = params;
-        this.connection = mysql.createConnection({
+        
+        let connection = {
             host,
-            user: username,
-            password,
-            database,
-            ...rest,
-        });
+            ...rest
+        }
+
+        if (username) {
+            connection = {...connection, user: username}
+        }
+
+        if (password) {
+            connection = {...connection, password}
+        }
+
+        if (database) {
+            connection = {...connection, database}
+        }
+
+        this.connection = mysql.createPool(connection);
     }
 
     closeConnection() {
@@ -138,7 +150,10 @@ export default class MySQLProvider extends Provider {
         let query = mysql.format(template, [tableName, item]);
         let result = await this.execute(query);
         const {insertId} = result;
-        return item.setId(insertId);
+        if (insertId) {
+            return item.setId(insertId);
+        }
+        return item;
     }
 
     /**

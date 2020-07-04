@@ -3,9 +3,6 @@ Tramway MySQLProvider is a simple Provider add-on to simplify the process of imp
 # Installation:
 1. `npm install tramway-connection-mysql --save`
 
-# Example project
-https://gitlab.com/tramwayjs/tramway-connection-example
-
 # Documentation
 
 ## Recommended Folder Structure in addition to Tramway
@@ -20,27 +17,67 @@ The `MySQLProvider` is a derived `Provider` which follows the same interface.
 ### Configuration parameters
 Please refer to https://github.com/mysqljs/mysql#connection-options for full connection options.
 
-| Parameter | Default | Usage |
-| --- | --- | --- |
-| host | localhost | The host of your MySQL database |
-| username | | The username for the database |
-| password | | The password for the database |
-| database |  | The name of the default database to connect to |
-| port | 3306 | The port for the database |
+| Parameter | Environment Variable | Default | Usage |
+| --- | --- | --- | --- |
+| host | MYSQL_HOST | localhost | The host of your MySQL database |
+| username | MYSQL_USERNAME | | The username for the database |
+| password | MYSQL_PASSWORD | | The password for the database |
+| database | MYSQL_DATABASE | | The name of the default database to connect to |
+| port | MYSQL_PORT | 3306 | The port for the database |
 
 ## Getting started
 It is recommended to make a config file with the core MySQL configuration and make an extension class to handle it before injecting that extension class into the Repository to work with the rest of Tramway's built-in features. The alternative to the extension class is calling the config parameters with the Repository every time the repository is used instead of just importing the provider to the repository.
 
+### Quick install with dependency injection:
+
+Parameters:
+
+In `src/config/parameters/global/index.js` add the following:
+
+```javascript
+import {parameters as mysql} from 'tramway-connection-mysql';
+
+export {
+    mysql,
+}
+```
+
+Services:
+
+In `src/config/services/index.js` add the following:
+
+```javascript
+import { services as mysql } from 'tramway-connection-mysql';
+
+export {
+    ...mysql,
+}
+```
+
+### Manually
+
 In your config folder add a 'mysql' file.
 
 mysql.js:
-```
-export default {
-    "host": "127.0.0.1",
-    "port": 3306,
-    "username": "root",
-    "password": "root"
+
+```javascript
+const {
+    MYSQL_HOST,
+    MYSQL_PORT,
+    MYSQL_USERNAME,
+    MYSQL_PASSWORD,
+    MYSQL_DATABASE
+} = process.env;
+
+const settings = {
+    host: MYSQL_HOST,
+    port: MYSQL_PORT,
+    username: MYSQL_USERNAME,
+    password: MYSQL_PASSWORD,
+    database: MYSQL_DATABASE,
 };
+
+export default settings;
 ```
 
 Note, the same can be achieved using your environment variables and passing the declaration from your instantiated .env to the placeholders in the above example.
