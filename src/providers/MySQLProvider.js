@@ -28,13 +28,25 @@ export default class MySQLProvider extends Provider {
         }
 
         const {database, username, password, dialect, host, ...rest} = params;
-        this.connection = mysql.createConnection({
+        
+        let connection = {
             host,
-            user: username,
-            password,
-            database,
-            ...rest,
-        });
+            ...rest
+        }
+
+        if (username) {
+            connection = {...connection, user: username}
+        }
+
+        if (password) {
+            connection = {...connection, password}
+        }
+
+        if (database) {
+            connection = {...connection, database}
+        }
+
+        this.connection = mysql.createPool(connection);
     }
 
     closeConnection() {
